@@ -4,6 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { InstitutionModule } from './modules/institution/institution.module';
+import { EventsModule } from './modules/events/events.module';
+import { ResourcesModule } from './modules/resources/resources.module';
+import { DelegationsModule } from './modules/delegations/delegations.module';
 
 @Module({
   imports: [
@@ -30,7 +36,12 @@ import { AttendanceModule } from './modules/attendance/attendance.module';
     AuthModule,
     UsersModule,
     AttendanceModule,
-    // ScheduleModule, ProjectsModule, InstitutionModule, EventsModule, ResourcesModule
+    ScheduleModule,
+    ProjectsModule,
+    InstitutionModule,
+    EventsModule,
+    ResourcesModule,
+    DelegationsModule,
   ],
 })
 export class AppModule {}

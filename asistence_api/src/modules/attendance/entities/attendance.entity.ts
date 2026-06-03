@@ -16,6 +16,11 @@ export enum AttendanceStatus {
   PENDING_REVIEW = 'PENDING_REVIEW'    // Pendiente de revisión manual
 }
 
+export enum AttendanceVerificationMethod {
+  MANUAL = 'MANUAL',
+  FACIAL_SCAN = 'FACIAL_SCAN'
+}
+
 @Entity('attendance')
 export class Attendance {
   @PrimaryGeneratedColumn('uuid')
@@ -54,6 +59,16 @@ export class Attendance {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata: any; // Información adicional (ej. dirección aproximada, IP, etc.)
+
+  @Column({ type: 'enum', enum: AttendanceVerificationMethod, default: AttendanceVerificationMethod.MANUAL })
+  verification_method: AttendanceVerificationMethod;
+
+  @Column({ nullable: true })
+  marked_by_id: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'marked_by_id' })
+  marked_by: User;
 
   // --- Observaciones y justificaciones ---
   @Column({ type: 'text', nullable: true })

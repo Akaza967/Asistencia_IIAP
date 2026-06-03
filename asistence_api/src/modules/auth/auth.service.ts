@@ -4,7 +4,9 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { OAuth2Client } from 'google-auth-library';
+import { User, UserRole } from '../users/entities/user.entity';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -17,6 +19,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register(registerDto: any) {
@@ -141,5 +144,79 @@ export class AuthService {
     await this.userRepository.save(user);
 
     return { message: 'Contraseña restablecida exitosamente. Ya puede iniciar sesión.' };
+  }
+
+  async googleLogin(googleLoginDto: any) {
+    const { idToken } = googleLoginDto;
+
+    const clientIdsStr = this.configService.get<string>('GOOGLE_CLIENT_IDS') || '';
+    const clientIds = clientIdsStr.split(',').map(id => id.trim()).filter(id => id.length > 0);
+
+    if (clientIds.length === 0) {
+      throw new BadRequestException('El servicio de autenticación con Google no está configurado en el servidor.');
+    }
+
+    const client = new OAuth2Client();
+
+    let payload;
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: clientIds,
+      });
+      payload = ticket.getPayload();
+    } catch (error) {
+      throw new UnauthorizedException('Token de Google inválido o expirado.');
+    }
+
+    if (!payload || !payload.email) {
+      throw new BadRequestException('No se pudo obtener el correo de la cuenta Google.');
+    }
+
+    const { email, name, picture } = payload;
+
+    // Buscar si el usuario ya existe
+    let user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      // Registro automático
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      const password_hash = await bcrypt.hash(randomPassword, 10);
+
+      user = this.userRepository.create({
+        email,
+        password_hash,
+        full_name: name || 'Usuario Google',
+        photo_url: picture || null,
+        is_verified: true, // Google ya verificó el correo
+        role: UserRole.EMPLOYEE,
+        is_active: true,
+      });
+
+      await this.userRepository.save(user);
+    } else {
+      if (!user.is_active) {
+        throw new UnauthorizedException('La cuenta está desactivada.');
+      }
+      
+      // Actualizar foto de perfil si antes no tenía o si cambió
+      if (picture && user.photo_url !== picture) {
+        user.photo_url = picture;
+        await this.userRepository.save(user);
+      }
+    }
+
+    // Generar JWT
+    const jwtPayload = { sub: user.id, email: user.email, role: user.role };
+    return {
+      access_token: this.jwtService.sign(jwtPayload),
+      user: {
+        id: user.id,
+        email: user.email,
+        full_name: user.full_name,
+        photo_url: user.photo_url,
+        role: user.role,
+      }
+    };
   }
 }

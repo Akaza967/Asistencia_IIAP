@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { AttendanceType } from '../entities/attendance.entity';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { AttendanceType, AttendanceVerificationMethod } from '../entities/attendance.entity';
 
 export class CreateAttendanceDto {
   @IsEnum(AttendanceType, { message: 'El tipo de asistencia no es válido' })
@@ -25,4 +25,16 @@ export class CreateAttendanceDto {
   @IsString()
   @IsOptional()
   observations?: string;
+
+  @IsString({ message: 'El id del proyecto debe ser una cadena de texto.' })
+  @IsOptional()
+  project_id?: string;
+
+  @IsUUID('4', { message: 'El ID del usuario debe ser un UUID válido.' })
+  @IsOptional()
+  user_id?: string;
+
+  @IsEnum(AttendanceVerificationMethod, { message: 'El método de verificación no es válido.' })
+  @IsOptional()
+  verification_method?: AttendanceVerificationMethod;
 }

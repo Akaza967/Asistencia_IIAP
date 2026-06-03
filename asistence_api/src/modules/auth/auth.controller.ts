@@ -5,7 +5,10 @@ import { VerifyEmailDto } from './dto/verify-email.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { GoogleLoginDto } from './dto/google-login.dto';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Autenticación (Auth)')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -35,6 +38,13 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  // Login / Registro con Google
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  async googleLogin(@Body() googleLoginDto: GoogleLoginDto) {
+    return this.authService.googleLogin(googleLoginDto);
+  }
+
   // Recuperación de Contraseña - Solicitud
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
@@ -50,6 +60,7 @@ export class AuthController {
   }
 
   // Endpoint de prueba protegido
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req) {
