@@ -1,0 +1,16 @@
+name: asistence_frontend
+description: Frontend en Flutter para la API (login + Google button)
+publish_to: 'none'
+version: 0.0.1
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  google_sign_in: ^5.4.0
+
+flutter:
+  uses-material-design: true
