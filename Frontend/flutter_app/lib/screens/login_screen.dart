@@ -23,6 +23,18 @@ class _LoginScreenState extends State<LoginScreen> {
     serverClientId: '855494548905-l3rt4b2pcertjifmhfoiku2tdjta4rvq.apps.googleusercontent.com',
   );
 
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool _isStrongPassword(String password) {
+    if (password.length < 8) return false;
+    final hasNumber = RegExp(r'[0-9]');
+    final hasLetter = RegExp(r'[a-zA-Z]');
+    return hasNumber.hasMatch(password) && hasLetter.hasMatch(password);
+  }
+
   void _showMessage(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -35,7 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submitLoginStep1() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      _showMessage('Ingresa un email', isError: true);
+      _showMessage('Ingresa un correo electrónico', isError: true);
+      return;
+    }
+    if (!_isValidEmail(email)) {
+      _showMessage('Ingresa un correo electrónico válido', isError: true);
       return;
     }
     setState(() => _loading = true);
@@ -54,7 +70,15 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     if (email.isEmpty || password.isEmpty) {
-      _showMessage('Email y contraseña son obligatorios', isError: true);
+      _showMessage('El correo electrónico y la contraseña son obligatorios', isError: true);
+      return;
+    }
+    if (!_isValidEmail(email)) {
+      _showMessage('Ingresa un correo electrónico válido', isError: true);
+      return;
+    }
+    if (password.length < 6) {
+      _showMessage('La contraseña debe tener al menos 6 caracteres', isError: true);
       return;
     }
 
@@ -82,6 +106,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       _showMessage('Completa todos los campos', isError: true);
+      return;
+    }
+    if (!_isValidEmail(email)) {
+      _showMessage('Ingresa un correo electrónico válido', isError: true);
+      return;
+    }
+    if (!_isStrongPassword(password)) {
+      _showMessage(
+        'La contraseña debe tener al menos 8 caracteres e incluir al menos una letra y un número.',
+        isError: true,
+      );
       return;
     }
     if (password != confirmPassword) {

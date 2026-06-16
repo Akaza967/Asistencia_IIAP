@@ -18,9 +18,14 @@ dependencies:
 flutter:
   assets:
     - assets/icons8-logo-de-google-48.png
+    - assets/logo_asistenciaiiap.png
+    - assets/splash_asistenciaiiap.png
+    - assets/transparent.png
   uses-material-design: true
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_launcher_icons: ^0.14.4
 
 flutter_launcher_icons:
@@ -29,11 +34,11 @@ flutter_launcher_icons:
   image_path: "assets/logo_asistenciaiiap.png"
 
 flutter_native_splash:
-  color: "#0D47A1"
-  image: assets/splash_asistenciaiiap.png
+  color: "#121212"
+  image: assets/transparent.png
 
   android_12:
-    image: assets/splash_asistenciaiiap.png
-    color: "#0D47A1"
+    image: assets/transparent.png
+    color: "#121212"
 
   fullscreen: true
