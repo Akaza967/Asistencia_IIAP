@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "855494548905",
+    "project_id": "asistenciaiiap",
+    "storage_bucket": "asistenciaiiap.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855494548905:android:32ffac61542a88ec15f8b8",
+        "android_client_info": {
+          "package_name": "com.example.asistence_frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855494548905-8lmilr431e7g7bgno8vj3h4oah36n592.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.asistence_frontend",
+            "certificate_hash": "d9d84b53e4255667e2d9a9a029efc0ff65b63d5b"
+          }
+        },
+        {
+          "client_id": "855494548905-l3rt4b2pcertjifmhfoiku2tdjta4rvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY152JEDuLKl0z4NZW9iwMkVSrzhEz0PU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855494548905-l3rt4b2pcertjifmhfoiku2tdjta4rvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

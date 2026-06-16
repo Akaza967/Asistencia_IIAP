@@ -13,8 +13,27 @@ dependencies:
   google_sign_in: ^5.4.0
   http: ^0.13.6
   shared_preferences: ^2.1.1
+  flutter_native_splash: ^2.4.7
 
 flutter:
   assets:
     - assets/icons8-logo-de-google-48.png
   uses-material-design: true
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo_asistenciaiiap.png"
+
+flutter_native_splash:
+  color: "#0D47A1"
+  image: assets/splash_asistenciaiiap.png
+
+  android_12:
+    image: assets/splash_asistenciaiiap.png
+    color: "#0D47A1"
+
+  fullscreen: true

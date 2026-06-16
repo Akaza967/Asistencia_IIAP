@@ -16,7 +16,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isRegisterMode = false;
   int _loginStep = 1;
   final _authService = AuthService();
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  
+  // NOTA: El serverClientId debe ser el "Web Client ID" obtenido de la consola de Google/Firebase
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+    serverClientId: '855494548905-l3rt4b2pcertjifmhfoiku2tdjta4rvq.apps.googleusercontent.com',
+  );
 
   void _showMessage(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -109,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (idToken == null) {
         throw Exception('No se obtuvo idToken de Google');
       }
-      final resp = await _authService.googleAuth(idToken);
+     final resp = await _authService.googleAuth(idToken); 
       _showMessage('Google auth exitosa.');
       if (resp.containsKey('accessToken')) {
         await _authService.saveToken('accessToken', resp['accessToken'].toString());
@@ -320,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text('O CONTINÚA CON', style: TextStyle(color: Colors.grey[600], letterSpacing: 1.1)),
               SizedBox(height: 16),
               GoogleSignInButton(
-                label: isLoginMode ? 'Loguearse con Google' : 'Registrarse con Google',
+                label: isLoginMode ? 'Continuar con Google' : 'Continuar con Google',
                 onPressed: _loading ? null : _submitGoogleSignIn,
               ),
             ],
